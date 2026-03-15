@@ -1,0 +1,14 @@
+16:59:39: [INFO] [C:\Users\Waterloo\School\WARG\Onboard\autonomy-bootcamp-2025-p2\modules\heartbeat\heartbeat_sender_worker.py | heartbeat_sender_worker | 47] Logger initialized
+16:59:39: [DEBUG] [C:\Users\Waterloo\School\WARG\Onboard\autonomy-bootcamp-2025-p2\modules\heartbeat\heartbeat_sender.py | create | 39] HeartbeatSender instance created
+16:59:39: [DEBUG] [C:\Users\Waterloo\School\WARG\Onboard\autonomy-bootcamp-2025-p2\modules\heartbeat\heartbeat_sender.py | run | 77] MAVLink Heartbeat Sent
+16:59:40: [DEBUG] [C:\Users\Waterloo\School\WARG\Onboard\autonomy-bootcamp-2025-p2\modules\heartbeat\heartbeat_sender.py | run | 77] MAVLink Heartbeat Sent
+16:59:41: [DEBUG] [C:\Users\Waterloo\School\WARG\Onboard\autonomy-bootcamp-2025-p2\modules\heartbeat\heartbeat_sender.py | run | 77] MAVLink Heartbeat Sent
+16:59:42: [DEBUG] [C:\Users\Waterloo\School\WARG\Onboard\autonomy-bootcamp-2025-p2\modules\heartbeat\heartbeat_sender.py | run | 77] MAVLink Heartbeat Sent
+16:59:43: [DEBUG] [C:\Users\Waterloo\School\WARG\Onboard\autonomy-bootcamp-2025-p2\modules\heartbeat\heartbeat_sender.py | run | 77] MAVLink Heartbeat Sent
+16:59:44: [DEBUG] [C:\Users\Waterloo\School\WARG\Onboard\autonomy-bootcamp-2025-p2\modules\heartbeat\heartbeat_sender.py | run | 77] MAVLink Heartbeat Sent
+16:59:45: [DEBUG] [C:\Users\Waterloo\School\WARG\Onboard\autonomy-bootcamp-2025-p2\modules\heartbeat\heartbeat_sender.py | run | 77] MAVLink Heartbeat Sent
+16:59:46: [DEBUG] [C:\Users\Waterloo\School\WARG\Onboard\autonomy-bootcamp-2025-p2\modules\heartbeat\heartbeat_sender.py | run | 77] MAVLink Heartbeat Sent
+16:59:47: [DEBUG] [C:\Users\Waterloo\School\WARG\Onboard\autonomy-bootcamp-2025-p2\modules\heartbeat\heartbeat_sender.py | run | 77] MAVLink Heartbeat Sent
+16:59:48: [DEBUG] [C:\Users\Waterloo\School\WARG\Onboard\autonomy-bootcamp-2025-p2\modules\heartbeat\heartbeat_sender.py | run | 77] MAVLink Heartbeat Sent
+16:59:49: [DEBUG] [C:\Users\Waterloo\School\WARG\Onboard\autonomy-bootcamp-2025-p2\modules\heartbeat\heartbeat_sender.py | run | 77] MAVLink Heartbeat Sent
+16:59:50: [INFO] [C:\Users\Waterloo\School\WARG\Onboard\autonomy-bootcamp-2025-p2\modules\heartbeat\heartbeat_sender_worker.py | heartbeat_sender_worker | 67] Heartbeat sender stopped
