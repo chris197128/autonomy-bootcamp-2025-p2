@@ -64,12 +64,13 @@ class HeartbeatSender:
         """
         try:
             self.connection.mav.heartbeat_send(
-            mavutil.mavlink.MAV_TYPE_GENERIC, #type
-            mavutil.mavlink.MAV_AUTOPILOT_INVALID,
-            mavutil.mavlink.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED, # base_mode
-            0, #custom_mode
-            mavutil.mavlink.MAV_STATE_ACTIVE,
-            3 #version
+            type=mavutil.mavlink.MAV_TYPE_GCS,
+            autopilot=mavutil.mavlink.MAV_AUTOPILOT_INVALID,
+            base_mode=mavutil.mavlink.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED,
+            custom_mode=0,
+            system_status=mavutil.mavlink.MAV_STATE_ACTIVE,
+            mavlink_version=3
+                
             )
         except Exception as e:
             self.logger.error("Failed to send MAVLink Heartbeat: " + str(e))
