@@ -18,7 +18,12 @@ from ..common.modules.logger import logger
 # =================================================================================================
 def heartbeat_receiver_worker(
     connection: mavutil.mavfile,
-    args,  # Place your own arguments here
+    controller: worker_controller.WorkerController,
+    state_queue_wrapper,
+    period = 1,
+    error = 1e-2,
+    threshold = 5
+    # Place your own arguments here
     # Add other necessary worker arguments here
 ) -> None:
     """
@@ -47,8 +52,27 @@ def heartbeat_receiver_worker(
     #                          ↓ BOOTCAMPERS MODIFY BELOW THIS COMMENT ↓
     # =============================================================================================
     # Instantiate class object (heartbeat_receiver.HeartbeatReceiver)
+    success, receiver = heartbeat_receiver.HeartbeatReceiver.create(
+        connection, local_logger)
+
+
+    if not success:
+        local_logger.error("Failed to create Heartbeat receiver")
+        return
+    
+    local_logger.info("Heartbeat receiver started", True)
+
 
     # Main loop: do work.
+
+    while not controller.is_exit_requested():
+        try:
+            state = receiver.run(period, error, threshold)
+            state_queue_wrapper.queue.put(state)
+        except Exception as e:
+            local_logger.error("Run function failed: " + str(e))
+    
+    local_logger.info("Heartbeat receiver stopped")
 
 
 # =================================================================================================
