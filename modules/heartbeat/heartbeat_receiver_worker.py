@@ -29,7 +29,11 @@ def heartbeat_receiver_worker(
     """
     Worker process.
 
-    args... describe what the arguments are
+    controller: worker controller
+    state_queue_wrapper: queue to output the receiver's state
+    period: heartbeat period
+    error: allowed error for the heartbeat to received within
+    threshold: number of heartbeats missed before considered disconnected
     """
     # =============================================================================================
     #                          ↑ BOOTCAMPERS MODIFY ABOVE THIS COMMENT ↑
@@ -66,7 +70,7 @@ def heartbeat_receiver_worker(
         try:
             state = receiver.run(period, error, threshold)
             state_queue_wrapper.queue.put(state)
-        except Exception as e:
+        except Exception as e:  # pylint: disable=broad-exception-caught
             local_logger.error("Run function failed: " + str(e))
 
     local_logger.info("Heartbeat receiver stopped")

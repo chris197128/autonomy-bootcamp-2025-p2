@@ -1,0 +1,24 @@
+18:21:01: [INFO] [C:\Users\Waterloo\School\WARG\Onboard\autonomy-bootcamp-2025-p2\modules\heartbeat\heartbeat_sender_worker.py | heartbeat_sender_worker | 49] Logger initialized
+18:21:01: [DEBUG] [C:\Users\Waterloo\School\WARG\Onboard\autonomy-bootcamp-2025-p2\modules\heartbeat\heartbeat_sender.py | create | 32] HeartbeatSender instance created
+18:21:01: [INFO] [C:\Users\Waterloo\School\WARG\Onboard\autonomy-bootcamp-2025-p2\modules\heartbeat\heartbeat_sender_worker.py | heartbeat_sender_worker | 63] Heartbeat sender started
+18:21:01: [DEBUG] [C:\Users\Waterloo\School\WARG\Onboard\autonomy-bootcamp-2025-p2\modules\heartbeat\heartbeat_sender.py | run | 64] MAVLink Heartbeat Sent
+18:21:01: [DEBUG] [C:\Users\Waterloo\School\WARG\Onboard\autonomy-bootcamp-2025-p2\modules\heartbeat\heartbeat_sender_worker.py | heartbeat_sender_worker | 67] Initial heartbeat sent
+18:21:02: [DEBUG] [C:\Users\Waterloo\School\WARG\Onboard\autonomy-bootcamp-2025-p2\modules\heartbeat\heartbeat_sender.py | run | 64] MAVLink Heartbeat Sent
+18:21:02: [DEBUG] [C:\Users\Waterloo\School\WARG\Onboard\autonomy-bootcamp-2025-p2\modules\heartbeat\heartbeat_sender_worker.py | heartbeat_sender_worker | 81] heartbeat sent
+18:21:03: [DEBUG] [C:\Users\Waterloo\School\WARG\Onboard\autonomy-bootcamp-2025-p2\modules\heartbeat\heartbeat_sender.py | run | 64] MAVLink Heartbeat Sent
+18:21:03: [DEBUG] [C:\Users\Waterloo\School\WARG\Onboard\autonomy-bootcamp-2025-p2\modules\heartbeat\heartbeat_sender_worker.py | heartbeat_sender_worker | 81] heartbeat sent
+18:21:04: [DEBUG] [C:\Users\Waterloo\School\WARG\Onboard\autonomy-bootcamp-2025-p2\modules\heartbeat\heartbeat_sender.py | run | 64] MAVLink Heartbeat Sent
+18:21:04: [DEBUG] [C:\Users\Waterloo\School\WARG\Onboard\autonomy-bootcamp-2025-p2\modules\heartbeat\heartbeat_sender_worker.py | heartbeat_sender_worker | 81] heartbeat sent
+18:21:05: [DEBUG] [C:\Users\Waterloo\School\WARG\Onboard\autonomy-bootcamp-2025-p2\modules\heartbeat\heartbeat_sender.py | run | 64] MAVLink Heartbeat Sent
+18:21:05: [DEBUG] [C:\Users\Waterloo\School\WARG\Onboard\autonomy-bootcamp-2025-p2\modules\heartbeat\heartbeat_sender_worker.py | heartbeat_sender_worker | 81] heartbeat sent
+18:21:06: [DEBUG] [C:\Users\Waterloo\School\WARG\Onboard\autonomy-bootcamp-2025-p2\modules\heartbeat\heartbeat_sender.py | run | 64] MAVLink Heartbeat Sent
+18:21:06: [DEBUG] [C:\Users\Waterloo\School\WARG\Onboard\autonomy-bootcamp-2025-p2\modules\heartbeat\heartbeat_sender_worker.py | heartbeat_sender_worker | 81] heartbeat sent
+18:21:07: [DEBUG] [C:\Users\Waterloo\School\WARG\Onboard\autonomy-bootcamp-2025-p2\modules\heartbeat\heartbeat_sender.py | run | 64] MAVLink Heartbeat Sent
+18:21:07: [DEBUG] [C:\Users\Waterloo\School\WARG\Onboard\autonomy-bootcamp-2025-p2\modules\heartbeat\heartbeat_sender_worker.py | heartbeat_sender_worker | 81] heartbeat sent
+18:21:08: [DEBUG] [C:\Users\Waterloo\School\WARG\Onboard\autonomy-bootcamp-2025-p2\modules\heartbeat\heartbeat_sender.py | run | 64] MAVLink Heartbeat Sent
+18:21:08: [DEBUG] [C:\Users\Waterloo\School\WARG\Onboard\autonomy-bootcamp-2025-p2\modules\heartbeat\heartbeat_sender_worker.py | heartbeat_sender_worker | 81] heartbeat sent
+18:21:09: [DEBUG] [C:\Users\Waterloo\School\WARG\Onboard\autonomy-bootcamp-2025-p2\modules\heartbeat\heartbeat_sender.py | run | 64] MAVLink Heartbeat Sent
+18:21:09: [DEBUG] [C:\Users\Waterloo\School\WARG\Onboard\autonomy-bootcamp-2025-p2\modules\heartbeat\heartbeat_sender_worker.py | heartbeat_sender_worker | 81] heartbeat sent
+18:21:10: [DEBUG] [C:\Users\Waterloo\School\WARG\Onboard\autonomy-bootcamp-2025-p2\modules\heartbeat\heartbeat_sender.py | run | 64] MAVLink Heartbeat Sent
+18:21:10: [DEBUG] [C:\Users\Waterloo\School\WARG\Onboard\autonomy-bootcamp-2025-p2\modules\heartbeat\heartbeat_sender_worker.py | heartbeat_sender_worker | 81] heartbeat sent
+18:21:11: [INFO] [C:\Users\Waterloo\School\WARG\Onboard\autonomy-bootcamp-2025-p2\modules\heartbeat\heartbeat_sender_worker.py | heartbeat_sender_worker | 87] Heartbeat sender stopped

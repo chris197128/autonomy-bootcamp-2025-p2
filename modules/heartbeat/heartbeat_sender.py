@@ -26,12 +26,11 @@ class HeartbeatSender:
         try:
             instance = cls(cls.__private_key, connection, logger)  # add args here
 
-        except Exception as e:
+        except (ValueError, TypeError, AttributeError) as e:
             logger.error("Failed to create HeartbeatSender instance: " + str(e))
             return False, None
-        else:
-            logger.debug("HeartbeatSender instance created", True)
-            return True, instance
+        logger.debug("HeartbeatSender instance created", True)
+        return True, instance
 
         # Create a HeartbeatSender object
 
@@ -52,19 +51,17 @@ class HeartbeatSender:
         """
         Attempt to send a heartbeat message.
         """
-        try:
-            self.connection.mav.heartbeat_send(
-                type=mavutil.mavlink.MAV_TYPE_GCS,
-                autopilot=mavutil.mavlink.MAV_AUTOPILOT_INVALID,
-                base_mode=mavutil.mavlink.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED,
-                custom_mode=0,
-                system_status=mavutil.mavlink.MAV_STATE_ACTIVE,
-                mavlink_version=3,
-            )
-        except Exception as e:
-            self.logger.error("Failed to send MAVLink Heartbeat: " + str(e))
-        else:
-            self.logger.debug("MAVLink Heartbeat Sent", True)
+
+        self.connection.mav.heartbeat_send(
+            type=mavutil.mavlink.MAV_TYPE_GCS,
+            autopilot=mavutil.mavlink.MAV_AUTOPILOT_INVALID,
+            base_mode=mavutil.mavlink.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED,
+            custom_mode=0,
+            system_status=mavutil.mavlink.MAV_STATE_ACTIVE,
+            mavlink_version=3,
+        )
+
+        self.logger.debug("MAVLink Heartbeat Sent", True)
 
         # Send a heartbeat message
 

@@ -27,6 +27,7 @@ def heartbeat_sender_worker(
     Worker process.
 
     args... describe what the arguments are
+
     connection: a mavutil.mavfile connection
     controller: WorkerController to stop the worker
     period: how often to send heartbeats (seconds)
@@ -65,7 +66,7 @@ def heartbeat_sender_worker(
     try:
         sender.run()
         local_logger.debug("Initial heartbeat sent")
-    except Exception as e:
+    except Exception as e:  # pylint: disable=broad-exception-caught
         local_logger.error("Failed to send initial heartbeat: " + str(e))
 
     start_time = time.time()
@@ -81,7 +82,7 @@ def heartbeat_sender_worker(
                 local_logger.debug("heartbeat sent", True)
                 start_time = time.time()
 
-        except Exception as e:
+        except Exception as e:  # pylint: disable=broad-exception-caught
             local_logger.error("Heartbeat Failed: " + str(e))
 
     local_logger.info("Heartbeat sender stopped")

@@ -28,6 +28,10 @@ def telemetry_worker(
     Worker process.
 
     args... describe what the arguments are
+
+    controller: worker controller
+    state_queue_wrapper: queue to output TelemetryData objects
+    period: frequency of output
     """
     # =============================================================================================
     #                          ↑ BOOTCAMPERS MODIFY ABOVE THIS COMMENT ↑
@@ -66,7 +70,7 @@ def telemetry_worker(
             state = tele.run()
             if state is not None:
                 state_queue_wrapper.queue.put(state)
-        except Exception as e: #pylint: disable=broad-exception-caught
+        except Exception as e:  # pylint: disable=broad-exception-caught
             local_logger.error("Run function failed: " + str(e))
     local_logger.info("Telemetry worker stopped")
 
