@@ -19,8 +19,8 @@ from ..common.modules.logger import logger
 def telemetry_worker(
     connection: mavutil.mavfile,
     controller: worker_controller.WorkerController,
-    state_queue_wrapper,
-    period = 1
+    state_queue_wrapper: queue_proxy_wrapper.QueueProxyWrapper,
+    period: float = 1,
     # Place your own arguments here
     # Add other necessary worker arguments here
 ) -> None:
@@ -51,14 +51,12 @@ def telemetry_worker(
     # =============================================================================================
     # Instantiate class object (telemetry.Telemetry)
 
-    success, tele = telemetry.Telemetry.create(
-        connection, local_logger, period
-    )
+    success, tele = telemetry.Telemetry.create(connection, local_logger, period)
 
     if not success:
         local_logger.error("Failed to create Telemetry object")
         return
-    
+
     local_logger.info("Telemetry started", True)
 
     # Main loop: do work.
@@ -71,6 +69,7 @@ def telemetry_worker(
         except Exception as e:
             local_logger.error("Run function failed: " + str(e))
     local_logger.info("Telemetry worker stopped")
+
 
 # =================================================================================================
 #                            ↑ BOOTCAMPERS MODIFY ABOVE THIS COMMENT ↑

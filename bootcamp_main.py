@@ -30,11 +30,16 @@ CONNECTION_STRING = "tcp:localhost:12345"
 #                            ↓ BOOTCAMPERS MODIFY BELOW THIS COMMENT ↓
 # =================================================================================================
 # Set queue max sizes (<= 0 for infinity)
-
+QUEUE_MAX = 0
 # Set worker counts
-
+NUM_HEARTBEAT_SENDER = 1
+NUM_HEARTBEAT_RECEIVER = 1
+NUM_TELEMETRY = 1
+NUM_COMMAND = 1
 # Any other constants
-
+MAIN_LOOP = 60
+TARGET_POSITION = command.Position(10, 20, 30)
+PERIOD = 1
 # =================================================================================================
 #                            ↑ BOOTCAMPERS MODIFY ABOVE THIS COMMENT ↑
 # =================================================================================================
@@ -74,25 +79,86 @@ def main() -> int:
     #                          ↓ BOOTCAMPERS MODIFY BELOW THIS COMMENT ↓
     # =============================================================================================
     # Create a worker controller
-
+    controller = worker_controller.WorkerController()
     # Create a multiprocess manager for synchronized queues
-
+    manager = mp.Manager()
     # Create queues
-
+    heartbeat_queue = queue_proxy_wrapper.QueueProxyWrapper(manager, maxsize=QUEUE_MAX)
+    telemetry_queue = queue_proxy_wrapper.QueueProxyWrapper(manager, maxsize=QUEUE_MAX)
+    command_queue = queue_proxy_wrapper.QueueProxyWrapper(manager, maxsize=QUEUE_MAX)
     # Create worker properties for each worker type (what inputs it takes, how many workers)
+    workers = []
+
     # Heartbeat sender
+
+    for _ in range(NUM_HEARTBEAT_SENDER):
+        p = mp.Process(
+            target=heartbeat_sender_worker.heartbeat_sender_worker,
+            args=(connection, controller, PERIOD),
+        )
+        workers.append(p)
 
     # Heartbeat receiver
 
+    for _ in range(NUM_HEARTBEAT_RECEIVER):
+        p = mp.Process(
+            target=heartbeat_receiver_worker.heartbeat_receiver_worker,
+            args=(connection, controller, heartbeat_queue, PERIOD),
+        )
+        workers.append(p)
+
     # Telemetry
+
+    for _ in range(NUM_TELEMETRY):
+        p = mp.Process(
+            target=telemetry_worker.telemetry_worker,
+            args=(connection, controller, telemetry_queue, PERIOD),
+        )
+        workers.append(p)
 
     # Command
 
+    for _ in range(NUM_COMMAND):
+        p = mp.Process(
+            target=command_worker.command_worker,
+            args=(connection, controller, telemetry_queue, command_queue, TARGET_POSITION),
+        )
+        workers.append(p)
+
     # Create the workers (processes) and obtain their managers
+
+    for p in workers:
+        p.start()
 
     # Start worker processes
 
     main_logger.info("Started")
+
+    start_time = time.time()
+
+    try:
+        # for the duration of the main_loop
+        while time.time() - start_time < MAIN_LOOP and not controller.is_exit_requested():
+            try:
+                # get all messages from command queue
+                while True:
+                    cmd_msg = command_queue.queue.get_nowait()
+                    main_logger.debug(f"Command output: {cmd_msg}")
+            except queue.Empty:
+                pass
+
+            try:
+                # get all messages from the telemetry queue
+                while True:
+                    tele_msg = telemetry_queue.queue.get_nowait()
+                    main_logger.debug(f"Telemetry: {tele_msg}")
+            except queue.Empty:
+                pass
+
+    except Exception as e:
+        main_logger.info(f"Could not get from queues: {e}")
+    finally:
+        controller.request_exit()
 
     # Main's work: read from all queues that output to main, and log any commands that we make
     # Continue running for 100 seconds or until the drone disconnects
@@ -100,6 +166,18 @@ def main() -> int:
     # Stop the processes
 
     main_logger.info("Requested exit")
+
+    for p in workers:
+        if p.is_alive():
+            p.terminate()
+        p.join()
+
+    for q in [command_queue, telemetry_queue, heartbeat_queue]:
+        try:
+            while True:
+                q.queue.get_nowait()
+        except queue.Empty:
+            pass
 
     # Fill and drain queues from END TO START
 

@@ -19,10 +19,10 @@ from ..common.modules.logger import logger
 def command_worker(
     connection: mavutil.mavfile,
     controller: worker_controller.WorkerController,
-    input_queue_wrapper,
-    output_queue_wrapper,
+    input_queue_wrapper: queue_proxy_wrapper.QueueProxyWrapper,
+    output_queue_wrapper: queue_proxy_wrapper.QueueProxyWrapper,
     target: command.Position,
-      # Place your own arguments here
+    # Place your own arguments here
     # Add other necessary worker arguments here
 ) -> None:
     """
@@ -59,7 +59,6 @@ def command_worker(
 
     local_logger.info("Command object started", True)
 
-
     # Main loop: do work.
 
     while not controller.is_exit_requested():
@@ -70,6 +69,7 @@ def command_worker(
         except Exception as e:
             local_logger.error("Could not call run: " + str(e))
     local_logger.info("Command worker stopped")
+
 
 # =================================================================================================
 #                            ↑ BOOTCAMPERS MODIFY ABOVE THIS COMMENT ↑

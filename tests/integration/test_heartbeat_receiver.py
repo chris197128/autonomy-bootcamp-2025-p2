@@ -31,6 +31,7 @@ ERROR_TOLERANCE = 1e-2
 # =================================================================================================
 # Add your own constants here
 import time
+
 # =================================================================================================
 #                            ↑ BOOTCAMPERS MODIFY ABOVE THIS COMMENT ↑
 # =================================================================================================
@@ -48,9 +49,7 @@ def start_drone() -> None:
 # =================================================================================================
 #                            ↓ BOOTCAMPERS MODIFY BELOW THIS COMMENT ↓
 # =================================================================================================
-def stop(
-    controller  # Add any necessary arguments
-) -> None:
+def stop(controller: worker_controller.WorkerController) -> None:  # Add any necessary arguments
     """
     Stop the workers.
     """
@@ -58,16 +57,16 @@ def stop(
 
 
 def read_queue(
-    state_queue_wrapper,  # Add any necessary arguments
+    state_queue_wrapper: queue_proxy_wrapper.QueueProxyWrapper,
     main_logger: logger.Logger,
-    controller
+    controller: worker_controller.WorkerController,  # Add any necessary arguments
 ) -> None:
     while not controller.is_exit_requested():
-        try:    
+        try:
             state = state_queue_wrapper.queue.get()
             main_logger.info("Receiver state: " + str(state))
         except Exception as e:
-            main_logger.error("Queue read failed: " + str(e))    
+            main_logger.error("Queue read failed: " + str(e))
         time.sleep(1)
 
     """
@@ -132,14 +131,21 @@ def main() -> int:
     threading.Timer(
         HEARTBEAT_PERIOD * (NUM_TRIALS * 2 + DISCONNECT_THRESHOLD + NUM_DISCONNECTS + 2),
         stop,
-        (controller,)
+        (controller,),
     ).start()
 
     # Read the main queue (worker outputs)
-    threading.Thread(target=read_queue, args=(state_queue_wrapper, main_logger, controller), daemon=True).start()
+    threading.Thread(
+        target=read_queue, args=(state_queue_wrapper, main_logger, controller), daemon=True
+    ).start()
 
     heartbeat_receiver_worker.heartbeat_receiver_worker(
-        connection, controller, state_queue_wrapper, HEARTBEAT_PERIOD, ERROR_TOLERANCE, DISCONNECT_THRESHOLD
+        connection,
+        controller,
+        state_queue_wrapper,
+        HEARTBEAT_PERIOD,
+        ERROR_TOLERANCE,
+        DISCONNECT_THRESHOLD,
     )
     # =============================================================================================
     #                          ↑ BOOTCAMPERS MODIFY ABOVE THIS COMMENT ↑

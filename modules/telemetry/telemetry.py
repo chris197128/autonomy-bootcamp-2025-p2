@@ -75,35 +75,30 @@ class Telemetry:
     @classmethod
     def create(
         cls,
-        connection: mavutil.mavfile, # Put your own arguments here
+        connection: mavutil.mavfile,  # Put your own arguments here
         local_logger: logger.Logger,
-        period = 1
+        period: float = 1,
     ) -> "tuple[True, Telemetry] | tuple[False, None]":
         """
         Falliable create (instantiation) method to create a Telemetry object.
         """
         try:
-            instance = cls(
-                cls.__private_key,
-                connection, 
-                local_logger,
-                period
-            )
+            instance = cls(cls.__private_key, connection, local_logger, period)
         except Exception as e:
             local_logger.error("Failed to create Telemetry instance: " + str(e))
             return False, None
         else:
             local_logger.debug("Telemetry instance created", True)
             return True, instance
-        
+
         # Create a Telemetry object
 
     def __init__(
         self,
         key: object,
-        connection: mavutil.mavfile,# Put your own arguments here
+        connection: mavutil.mavfile,  # Put your own arguments here
         local_logger: logger.Logger,
-        period
+        period: float,
     ) -> None:
         assert key is Telemetry.__private_key, "Use create() method"
 
@@ -112,9 +107,7 @@ class Telemetry:
         self.period = period
         # Do any intializiation here
 
-    def run(
-        self# Put your own arguments here
-    ) -> TelemetryData | None:
+    def run(self) -> TelemetryData | None:  # Put your own arguments here
         """
         Receive LOCAL_POSITION_NED and ATTITUDE messages from the drone,
         combining them together to form a single TelemetryData object.
@@ -122,7 +115,7 @@ class Telemetry:
         # Read MAVLink message LOCAL_POSITION_NED (32)
         # Read MAVLink message ATTITUDE (30)
         # Return the most recent of both, and use the most recent message's timestamp
-        
+
         attitude = None
         position = None
 
@@ -130,8 +123,7 @@ class Telemetry:
 
         while time.time() - start_time < self.period:
             msg = self.connection.recv_match(
-                type=["ATTITUDE", "LOCAL_POSITION_NED"], 
-                blocking=False
+                type=["ATTITUDE", "LOCAL_POSITION_NED"], blocking=False
             )
 
             if msg is None:
@@ -142,16 +134,16 @@ class Telemetry:
             elif msg.get_type() == "LOCAL_POSITION_NED":
                 position = msg
                 self.local_logger.debug("Received LOCAL_POSITION_NED")
-            
+
             if attitude and position:
                 break
-        
+
         if attitude and position:
             timestamp = max(attitude.time_boot_ms, position.time_boot_ms)
-            
+
             telemetry = TelemetryData(
                 timestamp,
-                position.x, # m
+                position.x,  # m
                 position.y,  # m
                 position.z,  # m
                 position.vx,  # m/s
@@ -165,7 +157,7 @@ class Telemetry:
                 attitude.yawspeed,  # rad/s
             )
             return telemetry
-        
+
         self.local_logger.warning("Telemetry timeout")
         return None
 

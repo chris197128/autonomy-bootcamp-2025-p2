@@ -29,6 +29,7 @@ NUM_FAILS = 3
 # =================================================================================================
 # Add your own constants here
 import time
+
 # =================================================================================================
 #                            ↑ BOOTCAMPERS MODIFY ABOVE THIS COMMENT ↑
 # =================================================================================================
@@ -46,9 +47,7 @@ def start_drone() -> None:
 # =================================================================================================
 #                            ↓ BOOTCAMPERS MODIFY BELOW THIS COMMENT ↓
 # =================================================================================================
-def stop(
-    controller  # Add any necessary arguments
-) -> None:
+def stop(controller: worker_controller.WorkerController) -> None:  # Add any necessary arguments
     """
     Stop the workers.
     """
@@ -56,9 +55,9 @@ def stop(
 
 
 def read_queue(
-    state_queue_wrapper,  # Add any necessary arguments
+    state_queue_wrapper: queue_proxy_wrapper.QueueProxyWrapper,
     main_logger: logger.Logger,
-    controller
+    controller: worker_controller.WorkerController,  # Add any necessary arguments
 ) -> None:
     while not controller.is_exit_requested():
         try:
@@ -68,12 +67,11 @@ def read_queue(
             continue
         except Exception as e:
             main_logger.error("Queue read failed: " + str(e))
-        
-    
+
     """
     Read and print the output queue.
     """
-     # Add logic to read from your worker's output queue and print it using the logger
+    # Add logic to read from your worker's output queue and print it using the logger
 
 
 # =================================================================================================
@@ -131,11 +129,11 @@ def main() -> int:
     threading.Timer(TELEMETRY_PERIOD * NUM_TRIALS * 2 + NUM_FAILS, stop, (controller,)).start()
 
     # Read the main queue (worker outputs)
-    threading.Thread(target=read_queue, args=(state_queue_wrapper, main_logger, controller), daemon=True).start()
+    threading.Thread(
+        target=read_queue, args=(state_queue_wrapper, main_logger, controller), daemon=True
+    ).start()
 
-    telemetry_worker.telemetry_worker(
-        connection, controller, state_queue_wrapper, TELEMETRY_PERIOD
-    )
+    telemetry_worker.telemetry_worker(connection, controller, state_queue_wrapper, TELEMETRY_PERIOD)
     # =============================================================================================
     #                          ↑ BOOTCAMPERS MODIFY ABOVE THIS COMMENT ↑
     # =============================================================================================

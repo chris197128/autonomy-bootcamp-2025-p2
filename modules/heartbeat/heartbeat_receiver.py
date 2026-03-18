@@ -21,20 +21,15 @@ class HeartbeatReceiver:
     def create(
         cls,
         connection: mavutil.mavfile,
-          # Put your own arguments here
-        local_logger: logger.Logger
+        # Put your own arguments here
+        local_logger: logger.Logger,
     ) -> "tuple[True, HeartbeatReceiver] | tuple[False, None]":
-        
         """
         Falliable create (instantiation) method to create a HeartbeatReceiver object.
         """
-        
+
         try:
-            instance = cls(
-                cls.__private_key,
-                connection,
-                local_logger
-            )
+            instance = cls(cls.__private_key, connection, local_logger)
         except Exception as e:
             local_logger.error("Failed to create HeartbeatReceiver instance: " + str(e))
             return False, None
@@ -49,8 +44,8 @@ class HeartbeatReceiver:
         key: object,
         connection: mavutil.mavfile,
         local_logger: logger.Logger,
-        missed = 0,
-        state = "Disconnected" # Put your own arguments here
+        missed: int = 0,
+        state: str = "Disconnected",  # Put your own arguments here
     ) -> None:
         assert key is HeartbeatReceiver.__private_key, "Use create() method"
 
@@ -61,20 +56,16 @@ class HeartbeatReceiver:
         # Do any intializiation here
 
     def run(
-        self,
-        period,
-        error,
-        threshold  # Put your own arguments here
-    ):
+        self, period: float, error: float, threshold: int
+    ) -> str:  # Put your own arguments here
         """
         Attempt to recieve a heartbeat message.
         If disconnected for over a threshold number of periods,
         the connection is considered disconnected.
         """
-        
 
-        msg = self.connection.recv_match(type="HEARTBEAT", blocking=True, timeout= period + error)
-        
+        msg = self.connection.recv_match(type="HEARTBEAT", blocking=True, timeout=period + error)
+
         if msg:
             self.missed = 0
             self.state = "Connected"
@@ -82,15 +73,12 @@ class HeartbeatReceiver:
         else:
             self.missed += 1
             self.local_logger.warning("Missed Heartbeats: " + str(self.missed))
-        
+
         if self.missed >= threshold:
             self.state = "Disconnected"
             self.local_logger.warning("Disconnected")
-        
+
         return self.state
-        
-            
-        
 
 
 # =================================================================================================

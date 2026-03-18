@@ -1,0 +1,29 @@
+16:19:52: [INFO] [C:\Users\Waterloo\School\WARG\Onboard\autonomy-bootcamp-2025-p2\modules\common\modules\logger\logger_main_setup.py | setup_main_logger | 62] main logger initialized
+16:19:53: [INFO] [C:\Users\Waterloo\School\WARG\Onboard\autonomy-bootcamp-2025-p2\tests\integration\test_command.py | main | 146] Connected!
+16:19:53: [DEBUG] [C:\Users\Waterloo\School\WARG\Onboard\autonomy-bootcamp-2025-p2\tests\integration\test_command.py | read_queue | 76] Command ouput: Change Altitude: 1
+16:19:53: [DEBUG] [C:\Users\Waterloo\School\WARG\Onboard\autonomy-bootcamp-2025-p2\tests\integration\test_command.py | read_queue | 76] Command ouput: Change Altitude: -1
+16:19:53: [DEBUG] [C:\Users\Waterloo\School\WARG\Onboard\autonomy-bootcamp-2025-p2\tests\integration\test_command.py | read_queue | 76] Command ouput: Change YAW: 63.43494882292201
+16:19:53: [DEBUG] [C:\Users\Waterloo\School\WARG\Onboard\autonomy-bootcamp-2025-p2\tests\integration\test_command.py | read_queue | 76] Command ouput: Change YAW: 90.0
+16:19:53: [DEBUG] [C:\Users\Waterloo\School\WARG\Onboard\autonomy-bootcamp-2025-p2\tests\integration\test_command.py | read_queue | 76] Command ouput: Change YAW: 116.56505117707799
+16:19:53: [DEBUG] [C:\Users\Waterloo\School\WARG\Onboard\autonomy-bootcamp-2025-p2\tests\integration\test_command.py | read_queue | 76] Command ouput: Change YAW: 45.0
+16:19:53: [DEBUG] [C:\Users\Waterloo\School\WARG\Onboard\autonomy-bootcamp-2025-p2\tests\integration\test_command.py | read_queue | 76] Command ouput: Change YAW: 63.43494882292201
+16:19:53: [DEBUG] [C:\Users\Waterloo\School\WARG\Onboard\autonomy-bootcamp-2025-p2\tests\integration\test_command.py | read_queue | 76] Command ouput: Change YAW: 90.0
+16:19:53: [DEBUG] [C:\Users\Waterloo\School\WARG\Onboard\autonomy-bootcamp-2025-p2\tests\integration\test_command.py | read_queue | 76] Command ouput: Change YAW: 26.565051177077994
+16:19:53: [DEBUG] [C:\Users\Waterloo\School\WARG\Onboard\autonomy-bootcamp-2025-p2\tests\integration\test_command.py | read_queue | 76] Command ouput: Change YAW: 45.0
+16:19:53: [DEBUG] [C:\Users\Waterloo\School\WARG\Onboard\autonomy-bootcamp-2025-p2\tests\integration\test_command.py | read_queue | 76] Command ouput: Change YAW: 90.0
+16:19:53: [DEBUG] [C:\Users\Waterloo\School\WARG\Onboard\autonomy-bootcamp-2025-p2\tests\integration\test_command.py | read_queue | 76] Command ouput: Change YAW: 45.0
+16:19:53: [DEBUG] [C:\Users\Waterloo\School\WARG\Onboard\autonomy-bootcamp-2025-p2\tests\integration\test_command.py | read_queue | 76] Command ouput: Change YAW: 90.0
+16:19:53: [DEBUG] [C:\Users\Waterloo\School\WARG\Onboard\autonomy-bootcamp-2025-p2\tests\integration\test_command.py | read_queue | 76] Command ouput: Change YAW: 135.0
+16:19:53: [DEBUG] [C:\Users\Waterloo\School\WARG\Onboard\autonomy-bootcamp-2025-p2\tests\integration\test_command.py | read_queue | 76] Command ouput: Change YAW: -26.565051177077994
+16:19:53: [DEBUG] [C:\Users\Waterloo\School\WARG\Onboard\autonomy-bootcamp-2025-p2\tests\integration\test_command.py | read_queue | 76] Command ouput: Change YAW: -45.0
+16:19:53: [DEBUG] [C:\Users\Waterloo\School\WARG\Onboard\autonomy-bootcamp-2025-p2\tests\integration\test_command.py | read_queue | 76] Command ouput: Change YAW: -90.0
+16:19:53: [DEBUG] [C:\Users\Waterloo\School\WARG\Onboard\autonomy-bootcamp-2025-p2\tests\integration\test_command.py | read_queue | 76] Command ouput: Change YAW: -45.0
+16:19:53: [DEBUG] [C:\Users\Waterloo\School\WARG\Onboard\autonomy-bootcamp-2025-p2\tests\integration\test_command.py | read_queue | 76] Command ouput: Change YAW: -90.0
+16:19:53: [DEBUG] [C:\Users\Waterloo\School\WARG\Onboard\autonomy-bootcamp-2025-p2\tests\integration\test_command.py | read_queue | 76] Command ouput: Change YAW: -135.0
+16:19:53: [DEBUG] [C:\Users\Waterloo\School\WARG\Onboard\autonomy-bootcamp-2025-p2\tests\integration\test_command.py | read_queue | 76] Command ouput: Change YAW: -63.43494882292201
+16:19:53: [DEBUG] [C:\Users\Waterloo\School\WARG\Onboard\autonomy-bootcamp-2025-p2\tests\integration\test_command.py | read_queue | 76] Command ouput: Change YAW: -90.0
+16:19:53: [DEBUG] [C:\Users\Waterloo\School\WARG\Onboard\autonomy-bootcamp-2025-p2\tests\integration\test_command.py | read_queue | 76] Command ouput: Change YAW: -116.56505117707799
+16:19:53: [DEBUG] [C:\Users\Waterloo\School\WARG\Onboard\autonomy-bootcamp-2025-p2\tests\integration\test_command.py | read_queue | 76] Command ouput: Change YAW: -45.00000000000005
+16:19:53: [DEBUG] [C:\Users\Waterloo\School\WARG\Onboard\autonomy-bootcamp-2025-p2\tests\integration\test_command.py | read_queue | 76] Command ouput: Change YAW: -63.43494882292201
+16:19:53: [DEBUG] [C:\Users\Waterloo\School\WARG\Onboard\autonomy-bootcamp-2025-p2\tests\integration\test_command.py | read_queue | 76] Command ouput: Change YAW: -90.0
+16:19:54: [ERROR] [C:\Users\Waterloo\School\WARG\Onboard\autonomy-bootcamp-2025-p2\tests\integration\test_command.py | read_queue | 78] Queue read failed: 

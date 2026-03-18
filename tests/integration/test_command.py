@@ -53,9 +53,7 @@ def start_drone() -> None:
 # =================================================================================================
 #                            ↓ BOOTCAMPERS MODIFY BELOW THIS COMMENT ↓
 # =================================================================================================
-def stop(
-    controller  # Add any necessary arguments
-) -> None:
+def stop(controller: worker_controller.WorkerController) -> None:  # Add any necessary arguments
     """
     Stop the workers.
     """
@@ -65,9 +63,9 @@ def stop(
 
 
 def read_queue(
-    output_queue_wrapper,  # Add any necessary arguments
+    output_queue_wrapper: queue_proxy_wrapper.QueueProxyWrapper,
     main_logger: logger.Logger,
-    controller
+    controller: worker_controller.WorkerController,  # Add any necessary arguments
 ) -> None:
     """
     Read and print the output queue.
@@ -79,22 +77,20 @@ def read_queue(
         except Exception as e:
             main_logger.error("Queue read failed: " + str(e))
             continue
-      
 
-    
     # Add logic to read from your worker's output queue and print it using the logger
 
 
 def put_queue(
-    input_queue_wrapper,
-    main_logger,
-    controller,
-    a  # Add any necessary arguments
+    input_queue_wrapper: queue_proxy_wrapper.QueueProxyWrapper,
+    main_logger: logger.Logger,
+    controller: worker_controller.WorkerController,
+    a: list[telemetry.TelemetryData],  # Add any necessary arguments
 ) -> None:
     """
     Place mocked inputs into the input queue periodically with period TELEMETRY_PERIOD.
     """
-    
+
     for t in a:
         if controller.is_exit_requested():
             break
@@ -103,9 +99,8 @@ def put_queue(
                 input_queue_wrapper.queue.put(t)
         except Exception as e:
             main_logger.error("Could not put Telemtry in Queue: " + str(e))
-    
-    stop(controller)
 
+    stop(controller)
 
     # Add logic to place the mocked inputs into your worker's input queue periodically
 
@@ -250,10 +245,20 @@ def main() -> int:
     threading.Timer(TELEMETRY_PERIOD * len(path), stop, (controller,)).start()
 
     # Put items into input queue
-    threading.Thread(target=put_queue, args=(input_queue_wrapper, main_logger, controller, path,)).start()
+    threading.Thread(
+        target=put_queue,
+        args=(
+            input_queue_wrapper,
+            main_logger,
+            controller,
+            path,
+        ),
+    ).start()
 
     # Read the main queue (worker outputs)
-    threading.Thread(target=read_queue, args=(output_queue_wrapper, main_logger, controller), daemon=True).start()
+    threading.Thread(
+        target=read_queue, args=(output_queue_wrapper, main_logger, controller), daemon=True
+    ).start()
 
     command_worker.command_worker(
         connection, controller, input_queue_wrapper, output_queue_wrapper, TARGET
