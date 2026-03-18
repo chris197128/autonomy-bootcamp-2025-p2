@@ -4,6 +4,8 @@ Command worker to make decisions based on Telemetry Data.
 
 import os
 import pathlib
+import queue  # imported to use catch queue.Empty
+
 
 from pymavlink import mavutil
 
@@ -28,7 +30,9 @@ def command_worker(
     """
     Worker process.
 
-    args... describe what the arguments are
+    input_queue_wrapper: input queue to take in TelemetryData objects
+    output_queue_wrapper: output queue to send to command.py
+    target: target position to base telemtry data on
     """
     # =============================================================================================
     #                          ↑ BOOTCAMPERS MODIFY ABOVE THIS COMMENT ↑
@@ -64,10 +68,12 @@ def command_worker(
     while not controller.is_exit_requested():
         try:
             tele = input_queue_wrapper.queue.get(timeout=1)
-            if tele:
-                com.run(tele)
-        except Exception as e:
-            local_logger.error("Could not call run: " + str(e))
+        except queue.Empty:
+            continue
+        try:
+            com.run(tele)
+        except (AttributeError, TypeError, ValueError) as e:
+            local_logger.error("Failed to process telemetry: " + str(e))
     local_logger.info("Command worker stopped")
 
 

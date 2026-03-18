@@ -84,12 +84,11 @@ class Telemetry:
         """
         try:
             instance = cls(cls.__private_key, connection, local_logger, period)
-        except Exception as e:
+        except (ValueError, TypeError, RuntimeError) as e:
             local_logger.error("Failed to create Telemetry instance: " + str(e))
             return False, None
-        else:
-            local_logger.debug("Telemetry instance created", True)
-            return True, instance
+        local_logger.debug("Telemetry instance created", True)
+        return True, instance
 
         # Create a Telemetry object
 

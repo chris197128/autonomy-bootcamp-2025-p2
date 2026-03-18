@@ -6,6 +6,9 @@ import math
 
 from pymavlink import mavutil
 
+# I'm using queue_proxy_wrapper in command.py directly, so I imported here
+from utilities.workers import queue_proxy_wrapper
+
 from ..common.modules.logger import logger
 from ..telemetry import telemetry
 
@@ -24,7 +27,6 @@ class Position:
 # =================================================================================================
 #                            ↓ BOOTCAMPERS MODIFY BELOW THIS COMMENT ↓
 # =================================================================================================
-from utilities.workers import queue_proxy_wrapper
 
 
 class Command:  # pylint: disable=too-many-instance-attributes
@@ -52,12 +54,11 @@ class Command:  # pylint: disable=too-many-instance-attributes
             instance = cls(
                 cls.__private_key, connection, target, local_logger, output_queue_wrapper
             )
-        except Exception as e:
+        except (AssertionError, TypeError, ValueError) as e:
             local_logger.error("Failed to create Command instance: " + str(e))
             return False, None
-        else:
-            local_logger.debug("Command instance created", True)
-            return True, instance
+        local_logger.debug("Command instance created", True)
+        return True, instance
 
         #  Create a Command object
 
@@ -87,6 +88,10 @@ class Command:  # pylint: disable=too-many-instance-attributes
         self,  # Put your own arguments here
         tele: telemetry.TelemetryData,
     ) -> None:
+        """
+        Finds the difference between the target telemetry and current telemetry;
+        Sends a command in the form of a TelemetryData object to correct this
+        """
 
         vx = tele.x_velocity
         vy = tele.y_velocity
@@ -104,9 +109,8 @@ class Command:  # pylint: disable=too-many-instance-attributes
 
         self.local_logger.debug(f"Avg Velocity:  ({avg_vx}, {avg_vy}, {avg_vz})")
 
-        """
-        Make a decision based on received telemetry data.
-        """
+        # Make a decision based on received telemetry data.
+
         # Log average velocity for this trip so far
 
         dx = self.target.x - tele.x
