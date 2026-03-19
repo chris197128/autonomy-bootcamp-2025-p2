@@ -7,6 +7,7 @@ import multiprocessing as mp
 import subprocess
 import threading
 import time
+import queue  # imported for queue.Empty
 
 from pymavlink import mavutil
 
@@ -74,8 +75,7 @@ def read_queue(
         try:
             state = output_queue_wrapper.queue.get(timeout=1)
             main_logger.debug("Command ouput: " + str(state))
-        except Exception as e:
-            main_logger.error("Queue read failed: " + str(e))
+        except queue.Empty:
             continue
 
     # Add logic to read from your worker's output queue and print it using the logger
@@ -97,7 +97,8 @@ def put_queue(
         try:
             if t is not None:
                 input_queue_wrapper.queue.put(t)
-        except Exception as e:
+                time.sleep(TELEMETRY_PERIOD)
+        except Exception as e:  # pylint: disable=broad-exception-caught
             main_logger.error("Could not put Telemtry in Queue: " + str(e))
 
     stop(controller)

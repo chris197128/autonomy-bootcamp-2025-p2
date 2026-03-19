@@ -5,6 +5,8 @@ Test the heartbeat reciever worker with a mocked drone.
 import multiprocessing as mp
 import subprocess
 import threading
+import time  # for time.sleep()
+import queue  # for queue.Empty
 
 from pymavlink import mavutil
 
@@ -30,7 +32,7 @@ ERROR_TOLERANCE = 1e-2
 #                            ↓ BOOTCAMPERS MODIFY BELOW THIS COMMENT ↓
 # =================================================================================================
 # Add your own constants here
-import time
+
 
 # =================================================================================================
 #                            ↑ BOOTCAMPERS MODIFY ABOVE THIS COMMENT ↑
@@ -61,17 +63,23 @@ def read_queue(
     main_logger: logger.Logger,
     controller: worker_controller.WorkerController,  # Add any necessary arguments
 ) -> None:
+    """
+    state_queue_wrapper: queue to read heartbeat messages from
+    controller: worker controller
+    """
+
     while not controller.is_exit_requested():
         try:
             state = state_queue_wrapper.queue.get()
             main_logger.info("Receiver state: " + str(state))
-        except Exception as e:
-            main_logger.error("Queue read failed: " + str(e))
+        except queue.Empty:
+            continue
+        except Exception as e:  # pylint: disable=broad-exception-caught
+            main_logger.error(f"Queue read failed: {e}")
         time.sleep(1)
 
-    """
-    Read and print the output queue.
-    """
+    # Read and print the output queue.
+
     # Add logic to read from your worker's output queue and print it using the logger
 
 

@@ -29,7 +29,6 @@ NUM_FAILS = 3
 #                            ↓ BOOTCAMPERS MODIFY BELOW THIS COMMENT ↓
 # =================================================================================================
 # Add your own constants here
-import time
 
 # =================================================================================================
 #                            ↑ BOOTCAMPERS MODIFY ABOVE THIS COMMENT ↑
@@ -60,18 +59,21 @@ def read_queue(
     main_logger: logger.Logger,
     controller: worker_controller.WorkerController,  # Add any necessary arguments
 ) -> None:
+    """
+    state_queue_wrapper: queue to get TelemetryData objects from
+    controller: worker controller
+    """
     while not controller.is_exit_requested():
         try:
             state = state_queue_wrapper.queue.get()
             main_logger.info("Telemetry state: " + str(state))
         except queue.Empty:
             continue
-        except Exception as e:
-            main_logger.error("Queue read failed: " + str(e))
+        except Exception as e:  # pylint: disable=broad-exception-caught
+            main_logger.error(f"Queue read failed: {e}")
 
-    """
-    Read and print the output queue.
-    """
+    # Read and print the output queue.
+
     # Add logic to read from your worker's output queue and print it using the logger
 
 

@@ -20,7 +20,7 @@ from modules.heartbeat import heartbeat_sender_worker
 from modules.telemetry import telemetry_worker
 from utilities.workers import queue_proxy_wrapper
 from utilities.workers import worker_controller
-from utilities.workers import worker_manager
+# from utilities.workers import worker_manager
 
 
 # MAVLink connection
@@ -155,7 +155,7 @@ def main() -> int:
             except queue.Empty:
                 pass
 
-    except Exception as e:
+    except Exception as e: #pylint: disable=broad-exception-caught
         main_logger.info(f"Could not get from queues: {e}")
     finally:
         controller.request_exit()
