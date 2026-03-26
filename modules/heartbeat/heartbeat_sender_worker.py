@@ -72,6 +72,7 @@ def heartbeat_sender_worker(
     start_time = time.time()
 
     while not controller.is_exit_requested():
+        controller.check_pause()
         end_time = time.time()
 
         try:

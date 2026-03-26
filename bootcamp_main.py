@@ -21,7 +21,7 @@ from modules.telemetry import telemetry_worker
 from utilities.workers import queue_proxy_wrapper
 from utilities.workers import worker_controller
 
-# from utilities.workers import worker_manager
+from utilities.workers.worker_manager import WorkerManager, WorkerProperties
 
 
 # MAVLink connection
@@ -88,73 +88,108 @@ def main() -> int:
     telemetry_queue = queue_proxy_wrapper.QueueProxyWrapper(manager, maxsize=QUEUE_MAX)
     command_queue = queue_proxy_wrapper.QueueProxyWrapper(manager, maxsize=QUEUE_MAX)
     # Create worker properties for each worker type (what inputs it takes, how many workers)
-    workers = []
 
     # Heartbeat sender
 
-    for _ in range(NUM_HEARTBEAT_SENDER):
-        p = mp.Process(
-            target=heartbeat_sender_worker.heartbeat_sender_worker,
-            args=(connection, controller, PERIOD),
-        )
-        workers.append(p)
-
+    success, heartbeat_sender_props = WorkerProperties.create(
+        heartbeat_sender_worker.heartbeat_sender_worker,
+        NUM_HEARTBEAT_SENDER,
+        (connection, controller, PERIOD),
+        input_queues=[],
+        output_queues=[],
+        controller=controller,
+        local_logger=main_logger,
+    )
+    if not success:
+        main_logger.error("Couldn't create properties")
     # Heartbeat receiver
 
-    for _ in range(NUM_HEARTBEAT_RECEIVER):
-        p = mp.Process(
-            target=heartbeat_receiver_worker.heartbeat_receiver_worker,
-            args=(connection, controller, heartbeat_queue, PERIOD),
-        )
-        workers.append(p)
-
+    success, heartbeat_receiver_props = WorkerProperties.create(
+        heartbeat_receiver_worker.heartbeat_receiver_worker,
+        NUM_HEARTBEAT_RECEIVER,
+        (connection, controller, heartbeat_queue, PERIOD),
+        input_queues=[],
+        output_queues=[],
+        controller=controller,
+        local_logger=main_logger,
+    )
+    if not success:
+        main_logger.error("Couldn't create properties")
     # Telemetry
 
-    for _ in range(NUM_TELEMETRY):
-        p = mp.Process(
-            target=telemetry_worker.telemetry_worker,
-            args=(connection, controller, telemetry_queue, PERIOD),
-        )
-        workers.append(p)
-
+    success, telemetry_props = WorkerProperties.create(
+        telemetry_worker.telemetry_worker,
+        NUM_TELEMETRY,
+        (connection, controller, telemetry_queue, PERIOD),
+        input_queues=[],
+        output_queues=[],
+        controller=controller,
+        local_logger=main_logger,
+    )
+    if not success:
+        main_logger.error("Couldn't create properties")
     # Command
 
-    for _ in range(NUM_COMMAND):
-        p = mp.Process(
-            target=command_worker.command_worker,
-            args=(connection, controller, telemetry_queue, command_queue, TARGET_POSITION),
-        )
-        workers.append(p)
-
+    success, command_props = WorkerProperties.create(
+        command_worker.command_worker,
+        NUM_COMMAND,
+        (connection, controller, telemetry_queue, command_queue, TARGET_POSITION),
+        input_queues=[],
+        output_queues=[],
+        controller=controller,
+        local_logger=main_logger,
+    )
+    if not success:
+        main_logger.error("Couldn't create properties")
     # Create the workers (processes) and obtain their managers
 
-    for p in workers:
-        p.start()
+    # Heartbeat sender
+    success, hb_sender_mgr = WorkerManager.create(heartbeat_sender_props, main_logger)
+    hb_sender_mgr.start_workers()
+    if not success:
+        main_logger.error("Couldn't create workers")
+    # Heartbeat receiver
+    success, hb_receiver_mgr = WorkerManager.create(heartbeat_receiver_props, main_logger)
+    hb_receiver_mgr.start_workers()
+    if not success:
+        main_logger.error("Couldn't create workers")
+    # Telemetry
+    success, telem_mgr = WorkerManager.create(telemetry_props, main_logger)
+    telem_mgr.start_workers()
+    if not success:
+        main_logger.error("Couldn't create workers")
+    # Command
+    success, cmd_mgr = WorkerManager.create(command_props, main_logger)
+    cmd_mgr.start_workers()
+    if not success:
+        main_logger.error("Couldn't create workers")
 
+    worker_managers = [hb_sender_mgr, hb_receiver_mgr, telem_mgr, cmd_mgr]
     # Start worker processes
 
     main_logger.info("Started")
 
     start_time = time.time()
 
+    queues = [
+        ("Command", command_queue),
+        ("Telemetry", telemetry_queue),
+        ("Heartbeat", heartbeat_queue),
+    ]
+
     try:
         # for the duration of the main_loop
         while time.time() - start_time < MAIN_LOOP and not controller.is_exit_requested():
-            try:
-                # get all messages from command queue
-                while True:
-                    cmd_msg = command_queue.queue.get_nowait()
-                    main_logger.debug(f"Command output: {cmd_msg}")
-            except queue.Empty:
-                pass
-
-            try:
-                # get all messages from the telemetry queue
-                while True:
-                    tele_msg = telemetry_queue.queue.get_nowait()
-                    main_logger.debug(f"Telemetry: {tele_msg}")
-            except queue.Empty:
-                pass
+            for name, q in queues:
+                try:
+                    msg = q.queue.get_nowait()
+                    if name == "Heartbeat" and msg == "Disconnected":
+                        main_logger.warning("Drone disconnected, requesting exit")
+                        controller.request_exit()
+                    else:
+                        main_logger.debug(f"{name} message: {msg}")
+                except queue.Empty:
+                    pass
 
     except Exception as e:  # pylint: disable=broad-exception-caught
         main_logger.info(f"Could not get from queues: {e}")
@@ -168,17 +203,21 @@ def main() -> int:
 
     main_logger.info("Requested exit")
 
-    for p in workers:
-        if p.is_alive():
-            p.terminate()
-        p.join()
+    for wm in worker_managers:
+        for worker in wm._WorkerManager__workers:  # pylint: disable=protected-access
+            if worker.is_alive():
+                worker.terminate()
+                worker.join()
 
-    for q in [command_queue, telemetry_queue, heartbeat_queue]:
-        try:
-            while True:
-                q.queue.get_nowait()
-        except queue.Empty:
-            pass
+    # for q in [command_queue, telemetry_queue, heartbeat_queue]:
+    #     try:
+    #         while True:
+    #             q.queue.get_nowait()
+    #     except queue.Empty:
+    #         pass
+    command_queue.fill_and_drain_queue()
+    heartbeat_queue.fill_and_drain_queue()
+    telemetry_queue.fill_and_drain_queue()
 
     # Fill and drain queues from END TO START
 

@@ -94,14 +94,9 @@ def put_queue(
     for t in a:
         if controller.is_exit_requested():
             break
-        try:
-            if t is not None:
-                input_queue_wrapper.queue.put(t)
-                time.sleep(TELEMETRY_PERIOD)
-        except Exception as e:  # pylint: disable=broad-exception-caught
-            main_logger.error("Could not put Telemtry in Queue: " + str(e))
-
-    stop(controller)
+        if t is not None:
+            input_queue_wrapper.queue.put(t)
+            time.sleep(TELEMETRY_PERIOD)
 
     # Add logic to place the mocked inputs into your worker's input queue periodically
 

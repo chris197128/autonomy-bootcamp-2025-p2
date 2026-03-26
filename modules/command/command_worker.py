@@ -66,6 +66,7 @@ def command_worker(
     # Main loop: do work.
 
     while not controller.is_exit_requested():
+        controller.check_pause()
         try:
             tele = input_queue_wrapper.queue.get(timeout=1)
         except queue.Empty:

@@ -67,6 +67,7 @@ def heartbeat_receiver_worker(
     # Main loop: do work.
 
     while not controller.is_exit_requested():
+        controller.check_pause()
         try:
             state = receiver.run(period, error, threshold)
             state_queue_wrapper.queue.put(state)
