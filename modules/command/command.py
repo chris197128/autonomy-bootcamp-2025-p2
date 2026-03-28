@@ -120,7 +120,7 @@ class Command:  # pylint: disable=too-many-instance-attributes
         dyaw = target_yaw - tele.yaw
         dyaw = (dyaw + math.pi) % (2 * math.pi) - math.pi
         dyaw_deg = math.degrees(dyaw)
-        dir = 1 if dyaw_deg < 0 else -1
+        direction = 1 if dyaw_deg < 0 else -1
 
         if abs(dz) > 0.5:
             self.connection.mav.command_long_send(
@@ -146,7 +146,7 @@ class Command:  # pylint: disable=too-many-instance-attributes
                 0,
                 dyaw_deg,
                 5,
-                dir,
+                direction,
                 1,
                 0,
                 0,
